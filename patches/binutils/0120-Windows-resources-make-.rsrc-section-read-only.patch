@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Edmunt Pienkowsky <roed@onet.eu>
+Date: Wed, 7 Sep 2022 08:57:44 +0200
+Subject: [PATCH] Windows resources: make .rsrc section read-only.
+
+Microsoft Portable Executable and Common Object File Format Specification revision 6.0 (1999) **wrongly** defines .rsrc section flags as: `IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_MEM_READ | IMAGE_SCN_MEM_WRITE`.
+Visual Studio, Microsoft Portable Executable and Common Object File Format Specification revision 8.0 (2006) defines .rsrc section flags as `IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_MEM_READ`.
+Also current PE format description at http://docs.microsoft.com/en-us/windows/win32/debug/pe-format defines .rsrc section flags as: `IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_MEM_READ`.
+
+See also:
+
+ld should make '.rsrc' section read-only on win32 (2005): http://www.mail-archive.com/bug-binutils@gnu.org/msg01012.html
+
+diff --git a/bfd/peXXigen.c b/bfd/peXXigen.c
+index a7b85713023..1fdff90ad1b 100644
+--- a/bfd/peXXigen.c
++++ b/bfd/peXXigen.c
+@@ -1028,7 +1028,7 @@ _bfd_XXi_swap_scnhdr_out (bfd * abfd, void * in, void * out)
+ 	{ ".pdata", IMAGE_SCN_MEM_READ | IMAGE_SCN_CNT_INITIALIZED_DATA },
+ 	{ ".rdata", IMAGE_SCN_MEM_READ | IMAGE_SCN_CNT_INITIALIZED_DATA },
+ 	{ ".reloc", IMAGE_SCN_MEM_READ | IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_MEM_DISCARDABLE },
+-	{ ".rsrc",  IMAGE_SCN_MEM_READ | IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_MEM_WRITE },
++	{ ".rsrc",  IMAGE_SCN_MEM_READ | IMAGE_SCN_CNT_INITIALIZED_DATA },
+ 	{ ".text" , IMAGE_SCN_MEM_READ | IMAGE_SCN_CNT_CODE | IMAGE_SCN_MEM_EXECUTE },
+ 	{ ".tls",   IMAGE_SCN_MEM_READ | IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_MEM_WRITE },
+ 	{ ".xdata", IMAGE_SCN_MEM_READ | IMAGE_SCN_CNT_INITIALIZED_DATA },
+diff --git a/binutils/rescoff.c b/binutils/rescoff.c
+index 83b08634c7f..960bef8b936 100644
+--- a/binutils/rescoff.c
++++ b/binutils/rescoff.c
+@@ -474,7 +474,7 @@ write_coff_file (const char *filename, const char *target,
+ 
+   sec = bfd_make_section_with_flags (abfd, ".rsrc",
+ 				     (SEC_HAS_CONTENTS | SEC_ALLOC
+-				      | SEC_LOAD | SEC_DATA));
++				      | SEC_LOAD | SEC_READONLY | SEC_DATA));
+   if (sec == NULL)
+     bfd_fatal ("bfd_make_section");
+ 
