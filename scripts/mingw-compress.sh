@@ -59,6 +59,12 @@ function func_compress_mingw() {
 
 	[[ ! -f $ARCHIVE_NAME ]] && {
 		echo "-> compressing $PREFIX"
+		
+		[[ -z "$SOURCE_DATE_EPOCH" ]] || {
+			echo -n "---> touching \"$(basename $PREFIX)\" ... "
+			find "$PREFIX" -exec touch -m -d "@$SOURCE_DATE_EPOCH" {} +
+			echo 'done'
+		}
 		[[ -d $PREFIX/mingw ]] && {
 			cd $BUILDS_DIR
 			rm -rf $PREFIX/mingw
@@ -70,6 +76,7 @@ function func_compress_mingw() {
 				"$ARCHIVE_NAME" "$PREFIX" >/dev/null 2>&1 \
 			)
 			[[ $? == 0 ]] && {
+				[[ -z "$SOURCE_DATE_EPOCH" ]] || touch -m -d "@$SOURCE_DATE_EPOCH" "$ARCHIVE_NAME"
 				echo "done"
 			} || {
 				echo; echo "error on compressing $PREFIX directory"
