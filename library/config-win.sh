@@ -3,11 +3,11 @@
 # The BSD 3-Clause License. http://www.opensource.org/licenses/BSD-3-Clause
 #
 # This file is part of MinGW-W64(mingw-builds: https://github.com/niXman/mingw-builds) project.
-# Copyright (c) 2011-2021 by niXman (i dotty nixman doggy gmail dotty com)
+# Copyright (c) 2011-2023 by niXman (i dotty nixman doggy gmail dotty com)
 # Copyright (c) 2012-2015 by Alexpux (alexpux doggy gmail dotty com)
 # All rights reserved.
 #
-# Project: MinGW-W64 ( http://sourceforge.net/projects/mingw-w64/ )
+# Project: MinGW-Builds ( https://github.com/niXman/mingw-builds )
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -35,11 +35,11 @@
 
 # **************************************************************************
 
-readonly HOST_MINGW_VERSION=8.1.0
-readonly HOST_MINGW_RT_VERSION=6
-readonly HOST_MINGW_BUILD_REV=0
-readonly i686_HOST_MINGW_PATH_URL="https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/$HOST_MINGW_VERSION/threads-posix/{exceptions}/i686-$HOST_MINGW_VERSION-release-posix-{exceptions}-rt_v$HOST_MINGW_RT_VERSION-rev$HOST_MINGW_BUILD_REV.7z"
-readonly x86_64_HOST_MINGW_PATH_URL="https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/$HOST_MINGW_VERSION/threads-posix/{exceptions}/x86_64-$HOST_MINGW_VERSION-release-posix-{exceptions}-rt_v$HOST_MINGW_RT_VERSION-rev$HOST_MINGW_BUILD_REV.7z"
+readonly HOST_MINGW_VERSION=12.2.0
+readonly HOST_MINGW_RT_VERSION=10
+readonly HOST_MINGW_BUILD_REV=2
+readonly i686_HOST_MINGW_PATH_URL="https://github.com/niXman/mingw-builds-binaries/releases/download/$HOST_MINGW_VERSION-rt_v$HOST_MINGW_RT_VERSION-rev$HOST_MINGW_BUILD_REV/i686-$HOST_MINGW_VERSION-release-posix-{exceptions}-{msvcrt}-rt_v$HOST_MINGW_RT_VERSION-rev$HOST_MINGW_BUILD_REV.7z"
+readonly x86_64_HOST_MINGW_PATH_URL="https://github.com/niXman/mingw-builds-binaries/releases/download/$HOST_MINGW_VERSION-rt_v$HOST_MINGW_RT_VERSION-rev$HOST_MINGW_BUILD_REV/x86_64-$HOST_MINGW_VERSION-release-posix-{exceptions}-{msvcrt}-rt_v$HOST_MINGW_RT_VERSION-rev$HOST_MINGW_BUILD_REV.7z"
 
 # **************************************************************************
 

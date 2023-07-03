@@ -3,11 +3,11 @@
 # The BSD 3-Clause License. http://www.opensource.org/licenses/BSD-3-Clause
 #
 # This file is part of MinGW-W64(mingw-builds: https://github.com/niXman/mingw-builds) project.
-# Copyright (c) 2011-2021 by niXman (i dotty nixman doggy gmail dotty com)
+# Copyright (c) 2011-2023 by niXman (i dotty nixman doggy gmail dotty com)
 # Copyright (c) 2012-2015 by Alexpux (alexpux doggy gmail dotty com)
 # All rights reserved.
 #
-# Project: MinGW-W64 ( http://sourceforge.net/projects/mingw-w64/ )
+# Project: MinGW-Builds ( https://github.com/niXman/mingw-builds )
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -48,18 +48,16 @@ PKG_PRIORITY=main
 #
 
 PKG_PATCHES=(
-	gcc/gcc-4.7-stdthreads.patch
 	gcc/gcc-5.1-iconv.patch
 	gcc/gcc-4.8-libstdc++export.patch
-	gcc/gcc-4.8.2-fix-for-windows-not-minding-non-existant-parent-dirs.patch
-	gcc/gcc-4.8.2-windows-lrealpath-no-force-lowercase-nor-backslash.patch
-	gcc/gcc-4.9.1-enable-shared-gnat-implib.mingw.patch
+	gcc/gcc-12-fix-for-windows-not-minding-non-existant-parent-dirs.patch
 	gcc/gcc-5.1.0-make-xmmintrin-header-cplusplus-compatible.patch
-	gcc/gcc-5.2-fix-mingw-pch.patch
 	gcc/gcc-5-dwarf-regression.patch
-	gcc/gcc-5.1.0-fix-libatomic-building-for-threads=win32.patch
-	gcc/gcc-10-ktietz-libgomp.patch
+	gcc/gcc-12-ktietz-libgomp.patch
 	gcc/gcc-libgomp-ftime64.patch
+	gcc/0020-libgomp-Don-t-hard-code-MS-printf-attributes.patch
+	gcc/gcc-10-libgcc-ldflags.patch
+    gcc/gcc-12-replace-abort-with-fancy_abort.patch
 )
 
 #
@@ -85,6 +83,9 @@ PKG_CONFIGURE_FLAGS=(
 	)
 	--enable-libstdcxx-time=yes
 	--enable-threads=$THREADS_MODEL
+	$( [[ $THREADS_MODEL == win32 ]] \
+		&& echo "--enable-libstdcxx-threads=yes" \
+	)
 	--enable-libgomp
 	--enable-libatomic
 	$( [[ "$MSVCRT_PHOBOS_OK" == yes && "$D_LANG_ENABLED" == yes ]] \
@@ -106,6 +107,9 @@ PKG_CONFIGURE_FLAGS=(
 		&& echo "--enable-sjlj-exceptions" \
 	)
 	#
+	$( [[ $RUNTIME_MAJOR_VERSION -ge 11 ]] \
+		&& echo "--disable-libssp" \
+	)
 	--disable-libstdcxx-pch
 	--disable-libstdcxx-debug
 	$( [[ $BOOTSTRAPING == yes ]] \
@@ -135,6 +139,7 @@ PKG_CONFIGURE_FLAGS=(
 	CPPFLAGS="\"$COMMON_CPPFLAGS\""
 	LDFLAGS="\"$COMMON_LDFLAGS $( [[ $BUILD_ARCHITECTURE == i686 ]] && echo -Wl,--large-address-aware )\""
 	LD_FOR_TARGET=$PREFIX/bin/ld.exe
+	--with-boot-ldflags="\"$LDFLAGS -Wl,--disable-dynamicbase -static-libstdc++ -static-libgcc\""
 )
 
 #

@@ -3,11 +3,11 @@
 # The BSD 3-Clause License. http://www.opensource.org/licenses/BSD-3-Clause
 #
 # This file is part of MinGW-W64(mingw-builds: https://github.com/niXman/mingw-builds) project.
-# Copyright (c) 2011-2021 by niXman (i dotty nixman doggy gmail dotty com)
+# Copyright (c) 2011-2023 by niXman (i dotty nixman doggy gmail dotty com)
 # Copyright (c) 2012-2015 by Alexpux (alexpux doggy gmail dotty com)
 # All rights reserved.
 #
-# Project: MinGW-W64 ( http://sourceforge.net/projects/mingw-w64/ )
+# Project: MinGW-Builds ( https://github.com/niXman/mingw-builds )
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -35,7 +35,7 @@
 
 # **************************************************************************
 
-PKG_VERSION=2.4.7
+PKG_VERSION=2.5.0
 PKG_NAME=expat-${PKG_VERSION}
 PKG_DIR_NAME=expat-${PKG_VERSION}
 PKG_TYPE=.tar.xz

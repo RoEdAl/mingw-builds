@@ -3,11 +3,11 @@
 # The BSD 3-Clause License. http://www.opensource.org/licenses/BSD-3-Clause
 #
 # This file is part of MinGW-W64(mingw-builds: https://github.com/niXman/mingw-builds) project.
-# Copyright (c) 2011-2021 by niXman (i dotty nixman doggy gmail dotty com)
+# Copyright (c) 2011-2023 by niXman (i dotty nixman doggy gmail dotty com)
 # Copyright (c) 2012-2015 by Alexpux (alexpux doggy gmail dotty com)
 # All rights reserved.
 #
-# Project: MinGW-W64 ( http://sourceforge.net/projects/mingw-w64/ )
+# Project: MinGW-Builds ( https://github.com/niXman/mingw-builds )
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -92,6 +92,7 @@ function runtime_post_install {
 	cp -fv $RUNTIME_DIR/$BUILD_ARCHITECTURE-winpthreads-$RUNTIME_VERSION/lib/libwinpthread.a $PREFIX/$TARGET/lib/ || { echo "17"; return 1; }
 	cp -fv $RUNTIME_DIR/$BUILD_ARCHITECTURE-winpthreads-$RUNTIME_VERSION/lib/libpthread.a $PREFIX/$TARGET/lib/ || { echo "18"; return 1; }
 	cp -fv $RUNTIME_DIR/$BUILD_ARCHITECTURE-winpthreads-$RUNTIME_VERSION/include/*.h $PREFIX/$TARGET/include/ || { echo "19"; return 1; }
+
 
 	[[ $USE_MULTILIB == yes ]] && {
 		local _reverse_bits=$(func_get_reverse_arch_bit $BUILD_ARCHITECTURE)

@@ -3,11 +3,11 @@
 # The BSD 3-Clause License. http://www.opensource.org/licenses/BSD-3-Clause
 #
 # This file is part of MinGW-W64(mingw-builds: https://github.com/niXman/mingw-builds) project.
-# Copyright (c) 2011-2021 by niXman (i dotty nixman doggy gmail dotty com)
+# Copyright (c) 2011-2023 by niXman (i dotty nixman doggy gmail dotty com)
 # Copyright (c) 2012-2015 by Alexpux (alexpux doggy gmail dotty com)
 # All rights reserved.
 #
-# Project: MinGW-W64 ( http://sourceforge.net/projects/mingw-w64/ )
+# Project: MinGW-Builds ( https://github.com/niXman/mingw-builds )
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -975,7 +975,8 @@ function func_map_gcc_name_to_gcc_version {
 		gcc-9-branch)	echo "9.6.0" ;;
 		gcc-10-branch)	echo "10.5.0" ;;
 		gcc-11-branch)	echo "11.3.0" ;;
-		gcc-trunk)		echo "12.0.0" ;;
+		gcc-12-branch)	echo "12.3.0" ;;
+		gcc-trunk)		echo "13.0.0" ;;
 		*) die "gcc name error: $1. terminate." ;;
 	esac
 }
@@ -1020,17 +1021,18 @@ function func_create_mingw_archive_name {
 	# $4 - architecture
 	# $5 - exceptions model
 	# $6 - threads model
-	# $7 - revision number
+	# $7 - default msvcrt
+	# $8 - revision number
 
 	local _archive=$1/$4-$( \
 		func_map_gcc_name_to_gcc_build_name \
 			$2 \
 			$3 \
-	)-$6-$5
+	)-$6-$5-$7
 
 	_archive=$_archive-rt_${RUNTIME_VERSION}
-	[[ -n $7 ]] && {
-		_archive=$_archive-rev$7
+	[[ -n $8 ]] && {
+		_archive=$_archive-rev$8
 	}
 
 	echo "$_archive.7z"

@@ -3,7 +3,7 @@
 # The BSD 3-Clause License. http://www.opensource.org/licenses/BSD-3-Clause
 #
 # This file is part of MinGW-W64(mingw-builds: https://github.com/niXman/mingw-builds) project.
-# Copyright (c) 2011-2021 by niXman (i dotty nixman doggy gmail dotty com)
+# Copyright (c) 2011-2023 by niXman (i dotty nixman doggy gmail dotty com)
 # Copyright (c) 2012-2015 by Alexpux (alexpux doggy gmail dotty com)
 # All rights reserved.
 #
@@ -36,11 +36,11 @@
 # **************************************************************************
 
 MINGW_W64_BUILDS_VERSION="MinGW-W64-builds-5.0.0"
-MINGW_W64_PKG_STRING="Built by MinGW-W64 project"
+MINGW_W64_PKG_STRING="Built by MinGW-Builds project"
 
 # **************************************************************************
 
-PROJECT_ROOT_URL=https://sourceforge.net/projects/mingw-w64
+PROJECT_ROOT_URL=https://github.com/niXman/mingw-builds
 BUG_URL=$PROJECT_ROOT_URL
 PROJECT_FS_ROOT_DIR=/home/frs/project/mingw-w64
 
@@ -100,7 +100,7 @@ SHOW_LOG_ON_ERROR=yes
 
 JOBS=4
 
-RUNTIME_VERSION=v9
+RUNTIME_VERSION=v12
 RUNTIME_BRANCH="master"
 
 CLANG_GCC_VERSION=gcc-4.9.3
@@ -110,11 +110,12 @@ CLANG_GCC_VERSION=gcc-4.9.3
 FETCH_MODE=no
 UPDATE_SOURCES=no
 BUILD_ARCHITECTURE=
-EXCEPTIONS_MODEL=sjlj
-USE_MULTILIB=yes
+EXCEPTIONS_MODEL=
+USE_MULTILIB=no
 STRIP_ON_INSTALL=yes
 BOOTSTRAPING=yes
 BOOTSTRAPINGALL=no
+MSVCRT_VERSION=msvcrt
 THREADS_MODEL=posix
 REV_NUM=
 COMPRESSING_BINS=no

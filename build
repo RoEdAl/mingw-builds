@@ -4,11 +4,11 @@
 # The BSD 3-Clause License. http://www.opensource.org/licenses/BSD-3-Clause
 #
 # This file is part of MinGW-W64(mingw-builds: https://github.com/niXman/mingw-builds) project.
-# Copyright (c) 2011-2021 by niXman (i dotty nixman doggy gmail dotty com)
+# Copyright (c) 2011-2023 by niXman (i dotty nixman doggy gmail dotty com)
 # Copyright (c) 2012-2015 by Alexpux (alexpux doggy gmail dotty com)
 # All rights reserved.
 #
-# Project: MinGW-W64 ( http://sourceforge.net/projects/mingw-w64/ )
+# Project: MinGW-Builds ( https://github.com/niXman/mingw-builds )
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -52,32 +52,35 @@ readonly RUN_ARGS="$@"
 	echo "usage:"
 	echo "  ./${0##*/} --mode=[clang|gcc|python]-version --arch=<i686|x86_64> [OPTIONS]"
 	echo "  help:"
-	echo "    --buildroot=<path>         - specifies the build root directory"
-	echo "    --fetch-only               - download sources without building"
-	echo "    --patch-on-fetch           - patch sources when fetching them"
-	echo "    --update-sources           - try to update sources from repositories before build"
+	echo "    --mode=<[clang|gcc|python]-version>  - specify building software with version"
+	echo "    --arch=<i686|x86_64>       - specifies the architecture"
 	echo "    --exceptions=<type>        - specifies exceptions model for GCC"
+	echo "    --enable-languages=<langs> - comma separated list(without spaces) of gcc supported languages. available languages:"
+	echo "                                 ada,c,c++,fortran,objc,obj-c++"
+	echo "    --jobs=N                   - specifies number of parallel make threads (defaults to 4)"
+	echo "    --rt-version=<version>     - specifies mingw-w64 runtime version to build:"
+	echo "                                 v3, v4, v5, v6, v7, v8, v9, v10, v11 and trunk - specifies specific branches in the git repo"
+	echo "                                 v3.3.0, v4.0.6, v5.0.4, v6.0.0, v7.0.0, v8.0.2, v9.0.0, v10.0.0, v11.0.0 is a specific release versions, uses the tarball"
+	echo "    --buildroot=<path>         - specifies the build root directory (path without spaces)"
+	echo "    --provided-toolchain=<path> - specifies the path (without spaces) with already existing local toolchain instead of download it"
 	echo "                                 available: dwarf, seh, sjlj, dwarfseh (picks by architecture)"
+	echo "    --bootstrapall             - bootstraping GCC & all prerequisites"
+	echo "    --no-multilib              - build GCC without multilib support"
+	echo "    --rev=N                    - specifies number of the build revision"
+	echo "    --threads=<model>          - specifies the threads model for GCC/libstdc++, available: win32, posix"
+	echo "    --static-gcc               - build static GCC"
+	echo "    --with-default-msvcrt=     - specifies msvc version the toolchain will target"
+	echo "                                 <msvcrt|msvcr80|msvcr90|msvcr100|msvcr110|msvcr120|ucrt>"
+	echo "    --with-default-win32-winnt=<ver>     - specifies default windows version the toolchain will target"
 	echo "    --use-lto                  - build with LTO using"
 	echo "    --no-gcc-lto               - disable LTO when building GCC"
 	echo "    --no-bootstrap             - do not bootstrap GCC"
-	echo "    --bootstrapall             - bootstraping GCC & all prerequisites"
-	echo "    --no-multilib              - build GCC without multilib support"
 	echo "    --no-extras                - don't build extra packages, only build GCC/clang and the runtime"
 	echo "    --no-strip                 - don't strip dll's & executables on install"
-	echo "    --static-gcc               - build static GCC"
 	echo "    --dyn-deps                 - build GCC with dynamically dependencies"
-	echo "    --jobs=N                   - specifies number of parallel make threads (defaults to 4)"
-	echo "    --rt-version=<version>     - specifies mingw-w64 runtime version to build"
-	echo "                                 v3, v4, v5, v6, v7, v8, v9, v10, trunk specifies specific branches in the git repo"
-	echo "                                 v3.3.0, v4.0.6, v5.0.4, v6.0.0, v7.0.0, v8.0.2, v9.0.0, v10.0.0 is a specific release versions, uses the tarball"
-	echo "    --with-default-msvcrt=     - specifies msvc version the toolchain will target"
-	echo "                                 <msvcrt|msvcr80|msvcr90|msvcr100|msvcr110|msvcr120|ucrt>"
-	echo "    --rev=N                    - specifies number of the build revision"
-	echo "    --threads=<model>          - specifies the threads model for GCC/libstdc++"
-	echo "                                 available: win32, posix"
-	echo "    --arch=<i686|x86_64>       - specifies the architecture"
-	echo "    --mode=<[clang|gcc|python]-version>  - specify building software with version"
+	echo "    --fetch-only               - download sources without building"
+	echo "    --patch-on-fetch           - patch sources when fetching them"
+	echo "    --update-sources           - try to update sources from repositories before build"
 	echo "    --with-testsuite           - run testsuite for packages if possible"
 	echo "    --version                  - print the version of the MinGW-W64 builds scripts"
 	echo "    --bin-compress             - compressing binaries"
@@ -94,9 +97,6 @@ readonly RUN_ARGS="$@"
 	echo "    --mtune-x32='<arch>'       - tune for x32 target"
 	echo "    --march-x64='<arch>'       - arch for x64 target"
 	echo "    --mtune-x64='<arch>'       - tune for x64 target"
-	echo "    --enable-languages=<langs> - comma separated list(without spaces) of gcc"
-	echo "                                 supported languages. available languages:"
-	echo "                                 ada,c,c++,fortran,objc,obj-c++"
 	echo "    --show-subtargets          - show list of subtargets for selected '--mode'"
 	echo "    --short-output             - reduce output by not printing skipped subtargets"
 	echo "    --logviewer-command        - use this command for the log viewer"
@@ -169,8 +169,11 @@ readonly RUN_ARGS="$@"
 	echo "    gcc-11-branch (currently 11.4.0-prerelease)"
 	echo "    gcc-12.1.0 (12.1.0 release)"
 	echo "    gcc-12.2.0 (12.2.0 release)"
-	echo "    gcc-12-branch (currently 12.3.0-prerelease)"
-	echo "    gcc-trunk (currently 13.0.0-snapshot)"
+	echo "    gcc-12.3.0 (12.3.0 release)"
+	echo "    gcc-12-branch (currently 12.4.0-prerelease)"
+	echo "    gcc-13.1.0 (13.1.0 release)"
+	echo "    gcc-13-branch (currently 13.2.0-prerelease)"
+	echo "    gcc-trunk (currently 14.0.0-snapshot)"
 
 	exit 0
 }
@@ -198,18 +201,8 @@ while [[ $# > 0 ]]; do
 		--arch=*)
 			readonly BUILD_ARCHITECTURE=${1/--arch=/}
 			case $BUILD_ARCHITECTURE in
-				i686)
-					case $EXCEPTIONS_MODEL in
-						dwarf|sjlj|dwarfseh) ;;
-						*) die "\"$BUILD_ARCHITECTURE\" is not valid architecture model for exception model \"$EXCEPTIONS_MODEL\". terminate." ;;
-					esac
-				;;
-				x86_64)
-					case $EXCEPTIONS_MODEL in
-						seh|sjlj|dwarfseh) ;;
-						*) die "\"$BUILD_ARCHITECTURE\" is not valid architecture model for exception model \"$EXCEPTIONS_MODEL\". terminate." ;;
-					esac
-				;;
+				x86_64|i686)
+                ;;
 				*) die "Unsupported architecture: \"$BUILD_ARCHITECTURE\". terminate."  ;;
 			esac
 		;;
@@ -225,6 +218,7 @@ while [[ $# > 0 ]]; do
 			ROOT_DIR=${1/--buildroot=/}
 			ROOT_DIR=${ROOT_DIR//:/:\/}
 			ROOT_DIR=${ROOT_DIR//\/\//\/}
+			ROOT_DIR=$(eval echo ${ROOT_DIR})
 			mkdir -p ${ROOT_DIR} || die "incorrect buildroot directory: \"${ROOT_DIR}\". terminate."
 			pushd ${ROOT_DIR} > /dev/null
 			ROOT_DIR=$PWD
@@ -317,8 +311,12 @@ while [[ $# > 0 ]]; do
                     RUNTIME_VERSION=v10
                     RUNTIME_BRANCH="v10.x"
                 ;;
+                v11)
+                    RUNTIME_VERSION=v11
+                    RUNTIME_BRANCH="v11.x"
+                ;;
 				trunk)
-					RUNTIME_VERSION=v9
+					RUNTIME_VERSION=v12
 					RUNTIME_BRANCH="master"
 				;;
 				v3.3.0)
@@ -353,6 +351,10 @@ while [[ $# > 0 ]]; do
 					RUNTIME_VERSION=v10.0.0
 					RUNTIME_BRANCH="release"
 				;;
+				v11.0.0)
+					RUNTIME_VERSION=v11.0.0
+					RUNTIME_BRANCH="release"
+				;;
 				*)
 					die "Unsupported runtime version $RUNTIME_VERSION."
 				;;
@@ -366,6 +368,7 @@ while [[ $# > 0 ]]; do
 				;;
 			esac
 		;;
+		--with-default-win32-winnt=*) WIN32_WINNT_VERSION=${1/--with-default-win32-winnt=/} ;;
 		--threads=*)
 			THREADS_MODEL=${1/--threads=/}
 			case $THREADS_MODEL in
@@ -458,7 +461,7 @@ mkdir -p \
 
 # **************************************************************************
 
-[[ -z ${BUILD_ARCHITECTURE} ]] && [[ ${FETCH_MODE} == no ]] && {
+[[ -z $BUILD_ARCHITECTURE ]] && {
 	die "Build architecture is not specified. terminate."
 }
 
@@ -467,20 +470,28 @@ mkdir -p \
 		die "you can't build 64-bit toolchain using 32-bit OS. terminate."
 	}
 	[[ $USE_MULTILIB == yes ]] && {
-		die "you can't build multitarget MinGW using 32-bit OS. terminate."
+		die "you can't build multitarget MinGW-W64 using 32-bit OS. terminate."
 	}
+}
+
+[[ -z $EXCEPTIONS_MODEL ]] && {
+    [[ $BUILD_ARCHITECTURE == i686 ]] && {
+        EXCEPTIONS_MODEL=dwarf
+    } || {
+        EXCEPTIONS_MODEL=seh
+    }
 }
 
 case $EXCEPTIONS_MODEL in
 	dwarf)
-		[[ ${BUILD_ARCHITECTURE} == x86_64 && ${FETCH_MODE} == no ]] && {
+		[[ ${BUILD_ARCHITECTURE} == x86_64 ]] && {
 			die "DWARF exceptions not allowed on x86_64 architecture. terminate."
 		}
 		readonly EXCEPTIONS_MODEL_I686=dwarf
 		readonly EXCEPTIONS_MODEL_X86_64=seh
 	;;
 	seh)
-		[[ ${BUILD_ARCHITECTURE} == i686 && ${FETCH_MODE} == no ]] && {
+		[[ ${BUILD_ARCHITECTURE} == i686 ]] && {
 			die "SEH exceptions not allowed on i686 architecture. terminate."
 		}
 		
@@ -515,7 +526,7 @@ esac
 # **************************************************************************
 # Install host toolchains
 
-if ! [[ -z "$PROVIDED_TOOLCHAIN" ]] ; then
+if [[ -n $PROVIDED_TOOLCHAIN ]] ; then
 	func_check_user_toolchain "$PROVIDED_TOOLCHAIN"
 
 	echo "Using provided toolchain: $PROVIDED_TOOLCHAIN"
@@ -541,8 +552,8 @@ if [[ -z "$PROVIDED_TOOLCHAIN" ]] ; then
 		$TOOLCHAINS_DIR \
 		$i686_HOST_MINGW_PATH \
 		$x86_64_HOST_MINGW_PATH \
-		${i686_HOST_MINGW_PATH_URL//"{exceptions}"/$EXCEPTIONS_MODEL_I686} \
-		${x86_64_HOST_MINGW_PATH_URL//"{exceptions}"/$EXCEPTIONS_MODEL_X86_64}
+		$(echo $i686_HOST_MINGW_PATH_URL | sed "s/{exceptions}/$EXCEPTIONS_MODEL_I686/g; s/{msvcrt}/$MSVCRT_VERSION/g") \
+		$(echo $x86_64_HOST_MINGW_PATH_URL | sed "s/{exceptions}/$EXCEPTIONS_MODEL_X86_64/g; s/{msvcrt}/$MSVCRT_VERSION/g")
 fi
 
 # **************************************************************************
@@ -561,13 +572,13 @@ fi
 		readonly GCC_PART_NAME=${GCC_PART_NAME//./}
 		readonly RUNTIME_PART_NAME=${RUNTIME_VERSION//./}
 		readonly RUNTIME_MAJOR_VERSION=$(echo $RUNTIME_VERSION | sed 's@^[^0-9]*\([0-9]\+\).*@\1@')
-		BASE_BUILD_DIR=$ROOT_DIR/${BUILD_ARCHITECTURE}-$GCC_PART_NAME-$THREADS_MODEL-$EXCEPTIONS_MODEL-rt_${RUNTIME_PART_NAME}${REV_STRING}
+		BASE_BUILD_DIR=$ROOT_DIR/${BUILD_ARCHITECTURE}-$GCC_PART_NAME-$THREADS_MODEL-$EXCEPTIONS_MODEL-$MSVCRT_VERSION-rt_${RUNTIME_PART_NAME}${REV_STRING}
 		MINGW_BUILD_NAME=${BUILD_ARCHITECTURE}-${GCC_NAME/gcc-/}
 		[[ $BUILD_SHARED_GCC == no ]] && {
 			BASE_BUILD_DIR=$BASE_BUILD_DIR-s
 			MINGW_BUILD_NAME=$MINGW_BUILD_NAME-static
 		}
-		MINGW_BUILD_NAME=$MINGW_BUILD_NAME$([[ $USE_MULTILIB == yes ]] && echo -n -multilib)-$THREADS_MODEL-$EXCEPTIONS_MODEL
+		MINGW_BUILD_NAME=$MINGW_BUILD_NAME$([[ $USE_MULTILIB == yes ]] && echo -n -multilib)-$THREADS_MODEL-$EXCEPTIONS_MODEL-$MSVCRT_VERSION
 		readonly MINGW_BUILD_NAME=$MINGW_BUILD_NAME-rt_${RUNTIME_VERSION}$([[ -n $REV_NUM ]] && echo -n -rev$REV_NUM)
 
 		readonly MINGWPREFIX=/mingw$(func_get_arch_bit ${BUILD_ARCHITECTURE})
@@ -960,6 +971,7 @@ func_clear_env
 			$BUILD_ARCHITECTURE \
 			$EXCEPTIONS_MODEL \
 			$THREADS_MODEL \
+			$MSVCRT_VERSION \
 			$REV_NUM \
 	)
 

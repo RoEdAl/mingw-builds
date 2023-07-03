@@ -3,11 +3,11 @@
 # The BSD 3-Clause License. http://www.opensource.org/licenses/BSD-3-Clause
 #
 # This file is part of MinGW-W64(mingw-builds: https://github.com/niXman/mingw-builds) project.
-# Copyright (c) 2011-2021 by niXman (i dotty nixman doggy gmail dotty com)
+# Copyright (c) 2011-2023 by niXman (i dotty nixman doggy gmail dotty com)
 # Copyright (c) 2012-2015 by Alexpux (alexpux doggy gmail dotty com)
 # All rights reserved.
 #
-# Project: MinGW-W64 ( http://sourceforge.net/projects/mingw-w64/ )
+# Project: MinGW-Builds ( https://github.com/niXman/mingw-builds )
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -35,12 +35,12 @@
 
 # **************************************************************************
 
-PKG_VERSION=1.2.12
+PKG_VERSION=1.2.13
 PKG_NAME=$PKG_ARCHITECTURE-zlib-${PKG_VERSION}-$LINK_TYPE_SUFFIX
 PKG_DIR_NAME=zlib-${PKG_VERSION}
 PKG_TYPE=.tar.gz
 PKG_URLS=(
-	"https://zlib.net/current/zlib-${PKG_VERSION}${PKG_TYPE}"
+	"https://github.com/madler/zlib/archive/refs/tags/v${PKG_VERSION}${PKG_TYPE}"
 )
 
 PKG_PRIORITY=prereq
@@ -49,10 +49,10 @@ PKG_LNDIR=yes
 #
 
 PKG_PATCHES=(
-	zlib/01-zlib-1.2.11-1-buildsys.mingw.patch
+	zlib/01-zlib-1.2.13-buildsys.mingw.patch
 	zlib/03-dont-put-sodir-into-L.mingw.patch
 	zlib/04-fix-largefile-support.patch
-	zlib/607.patch
+	#zlib/607.patch
 )
 
 #

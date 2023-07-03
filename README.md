@@ -1,6 +1,6 @@
 # MinGW Builds [![x86_64 and i686 release builds](https://github.com/niXman/mingw-builds/actions/workflows/build_cmake.yml/badge.svg)](https://github.com/niXman/mingw-builds/actions/workflows/build_cmake.yml)
 
-The scripts provided by the MinGW-W64 project[1] are designed
+The scripts provided by the MinGW-Builds project[1] are designed
 for building the dual-target(i686/x86_64) MinGW-W64 compiler for i686/x86_64 hosts.
 
 The scripts are distributed under the 'BSD 3' license[2].
@@ -39,12 +39,13 @@ In order to use the scripts provided by the MinGW-W64 project it is needed:
   --no-multilib                       - build GCC without multilib support (default for DWARF and SEH exception models).
   --static-gcc                        - build static GCC.
   --dyn-deps                          - build GCC with dynamically dependencies.
-  --rt-version=<v3..v10>              - version of mingw-w64 runtime to build.
+  --rt-version=<v3..v11>              - version of mingw-w64 runtime to build.
   --rev=N                             - number of the build revision.
   --with-testsuite                    - run testsuite for packages that contain flags for it.
   --threads=<posix|win32>             - used threads model.
   --enable-languages=<langs>          - comma separated list(without spaces) of gcc supported languages.
                                         available languages: ada,c,c++,fortran,objc,obj-c++
+  --with-default-win32-winnt=<ver>    - default windows version the toolchain will target
 ```
   For more options run: "./build --help"
 
@@ -130,6 +131,8 @@ At the moment, successfully building the following versions:
   gcc-11.3.0
   gcc-12.1.0
   gcc-12.2.0
+  gcc-12.3.0
+  gcc-13.1.0
   gcc-4.6-branch (currently 4.6.5 prerelease)
   gcc-4.7-branch (currently 4.7.5 prerelease)
   gcc-4.8-branch (currently 4.8.6 prerelease)
@@ -141,8 +144,9 @@ At the moment, successfully building the following versions:
   gcc-9-branch (currently 9.6.0-prerelease)
   gcc-10-branch (currently 10.5.0-prerelease)
   gcc-11-branch (currently 11.3.0-prerelease)
-  gcc-12-branch (currently 12.3.0-prerelease)
-  gcc-trunk (currently 13.0.0 snapshot)
+  gcc-12-branch (currently 12.4.0-prerelease)
+  gcc-13-branch (currently 13.2.0-prerelease)
+  gcc-trunk (currently 14.0.0 snapshot)
 ```
 
 Builds also contains patches for building Python 2.7.9 and 3.4.3 versions for support gdb pretty printers.
@@ -152,6 +156,6 @@ Big thanks for these patches to:
   2012-2015 Ray Donnelly, Alexey Pavlov
 ```
 
-[1] http://sourceforge.net/projects/mingw-w64/
+[1] https://github.com/niXman/mingw-builds/
 
 [2] http://www.opensource.org/licenses/BSD-3-Clause
